@@ -1,4 +1,4 @@
-package TEMA2;
+package Ejercicios_T1_T2;
 
 public class EJERCICIOS {
 

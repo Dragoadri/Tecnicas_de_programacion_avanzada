@@ -29,24 +29,62 @@ public class Pruebas<T> {
 	 *         hijos del árbol
 	 */
 
-	private static <T> int gradoArbol(Arbol_N<T> a) {
-		// Si el árbol está vacío, devuelve 0
-		// Si no, llama a la función gradoArbolMax
+	public static <T> int gradoArbol(Arbol_N<T> a) {
 		return a.esVacio() ? 0 : gradoArbolMax(a);
 	}
 
 	private static <T> int gradoArbolMax(Arbol_N<T> a) {
 		int grado = a.getNumHijos();
 
-		// Recorre los hijos del árbol y llama a la función de forma recursiva
-		// para obtener el grado máximo de los hijos
 		for (Arbol_N<T> hijo : a.getHijos()) {
 			grado = Math.max(grado, gradoArbol(hijo));
 		}
-		// Devuelve el grado máximo
+
 		return grado;
 	}
-
+	
+	
+	
+//	private static <T> int gradoArbol1(Arbol_N<T> a) {
+//
+//		// Al principio el grado es 0
+//		int grado = 0;
+//
+//		// Si el árbol no está vacío
+//		if (!a.esVacio()) {
+//
+//			// Booleano que comprueba si todos los hijos son hoja
+//			boolean todosLosHijosSonHoja = true;
+//
+//			// Indice para el while
+//			int i = 1;
+//
+//			// Mientras todos los hijos sean hoja y no se haya recorrido todos los hijos
+//			while (todosLosHijosSonHoja && i <= a.getNumHijos()) {
+//
+//				// Si el hijo es vacío,el boolenao se mantiene en true
+//				// Si el hijo no es vacío, se comprueba si el hijo tiene un único hijo
+//				// lo que quiere decir que es hoja y se mantiene en true sino, se pone en false
+//				todosLosHijosSonHoja = a.getHijoN(i).esVacio() ? todosLosHijosSonHoja
+//						: a.getHijoN(i).getNumHijos() == 1;
+//
+//				// Se incrementa el índice
+//				i++;
+//			}
+//
+//			// Si todos los hijos son hoja, el grado es el número de hijos
+//			if (todosLosHijosSonHoja) {
+//				grado = a.getNumHijos();
+//				// Si no, se recorre los hijos y se llama a la función de forma recursiva
+//			} else {
+//				for (Arbol_N<T> hijo : a.getHijos()) {
+//					grado = Math.max(grado, gradoArbol(hijo));
+//				}
+//			}
+//		}
+//		return grado;
+//
+//	}
 
 	/**
 	 * 
@@ -65,65 +103,63 @@ public class Pruebas<T> {
 	 * 
 	 * 
 	 */
-	
 	private static boolean esABB(Arbol_N<Integer> a) {
 
-		// Si el árbol está vacío, devuelve true
-		if (a.esVacio()) {
-			return true;
-		
-		//Si el arbol tiene 2 hijos
-		} else if (a.getNumHijos() == 2) {
+		return
+		// Comprueba si el árbol es vacío y si lo es devuelve true
+		a.esVacio() ? true :
 
-			Arbol_N<Integer> izq = a.getHijoN(1);
-			Arbol_N<Integer> der = a.getHijoN(2);
+		// Comprueba si el árbol tiene 2 hijos
+				(a.getNumHijos() == 2) ?
 
-			//se comprueba si uno de los hijos es vacio
-			if (izq.esVacio() || der.esVacio()) {
+				// Comprueba si uno de los hijos es vacío
+						((a.getHijoN(1).esVacio() || a.getHijoN(2).esVacio()) ?
 
-				//si el hijo izquierdo es vacio, se comprueba si el hijo derecho es mayor que la raiz
-				//y si el hijo derecho es ABB
-				
-				//si el hijo derecho es vacio, se comprueba si el hijo izquierdo es menor que la raiz
-				//y si el hijo izquierdo es ABB
-				return izq.esVacio() ? der.getRaiz() > a.getRaiz() && esABB(der)
-						: izq.getRaiz() < a.getRaiz() && esABB(izq);
+						// Si uno de los hijos es vacío, comprueba si el izquierdo es vacío
+								(a.getHijoN(1).esVacio()) ?
 
-			} else {
-				//si ambos hijos tienen contenido, se comprueba si el hijo izquierdo es menor que la raiz
-				//y si el hijo derecho es mayor que la raiz
-				//si alguno de los hijos no cumple la condicion, se devuelve false
-				
-				if (izq.getRaiz() >= a.getRaiz() || der.getRaiz() <= a.getRaiz()) {
-					return false;
-				} else {
+								// Si el hijo izquierdo es vacío, comprueba si el hijo derecho es mayor que la
+								// raíz
+								// y si el hijo derecho es ABB
+										a.getHijoN(2).getRaiz() > a.getRaiz() &&
+										
+										esABB(a.getHijoN(2)) :
 
-					//se obtienen los valores minimos y maximos de los arboles
-					
-					//Orden de complejidad 4*O(n) siendo n el numero de nodos del arbol introducido
-					
-					int minHijo1 = getMinInArbol_N(izq); 
-					int maxHijo1 = getMaxInArbol_N(izq);
-					int minHijo2 = getMinInArbol_N(der);
-					int maxHijo2 = getMaxInArbol_N(der);
-					
-					//se comprueba si el hijo izquierdo es menor que la raiz
-					//y si el hijo derecho es mayor que la raiz
-					//y si el hijo izquierdo es menor que el hijo derecho
-					//y si el hijo izquierdo es ABB
-					//y si el hijo derecho es ABB
+										// Como el jizquierdo no es vacío, comprueba si el hijo izquierdo es menor que
+										// la raíz
+										// y si el hijo izquierdo es ABB
+										a.getHijoN(1).getRaiz() < a.getRaiz() &&
+										getMinInArbol_N(a.getHijoN(1)) < a.getRaiz() &&
+										esABB(a.getHijoN(1))
+								:
 
-					return maxHijo1 < a.getRaiz() && minHijo2 > a.getRaiz() && minHijo1 < minHijo2
-							&& maxHijo1 < maxHijo2 && esABB(izq) && esABB(der);
-				}
-			}
+									// Si ambos hijos no son vacíos, comprueba si el hijo izquierdo es menor que la
+								// raíz
+								// y si el hijo derecho es mayor que la raíz
+								// devuelve false si no se cumple la condición ^^^^^^
+								(a.getHijoN(1).getRaiz() >= a.getRaiz() || a.getHijoN(2).getRaiz() <= a.getRaiz())
+										? false
+										:
 
-		} else {
-			// Si el árbol tiene más de 2 hijos, devuelve false ya que no es un ABB al tener
-			// más de 2 hijos
-			// Si el árbol tiene 1 hijo, devuelve true ya que es un ABB (nodo hoja)
-			return !(a.getNumHijos() > 2);
-		}
+										// Comprueba que los hijos sean ABB
+										// y que todo lo que haya a la derecha sea
+										// menor que lo que haya a la izquierda
+										// y que todo lo que haya a la izquierda sea
+										// menor que lo que haya a la derecha
+
+											getMaxInArbol_N(a.getHijoN(1)) < a.getRaiz() &&
+											getMinInArbol_N(a.getHijoN(2)) > a.getRaiz() &&
+											    
+												getMinInArbol_N(a.getHijoN(1)) < getMinInArbol_N(a.getHijoN(2))
+												&& getMaxInArbol_N(a.getHijoN(1)) < getMaxInArbol_N(a.getHijoN(2))
+												&& esABB(a.getHijoN(1)))
+												&& esABB(a.getHijoN(2))
+												
+												
+						:
+
+						// si el arbol tiene mas de 2 hijos, ya no sera ABB
+						!(a.getNumHijos() > 2);
 
 	}
 
@@ -140,34 +176,34 @@ public class Pruebas<T> {
 	 */
 
 	private static <T> boolean sonIguales(Arbol_N<T> a, Arbol_N<T> b) {
-
+		
 		// Si ambos árboles son vacíos, devuelve true, si no, llama a la función
 		return (a.esVacio() && b.esVacio()) ? true : compruebaIguales(a, b);
 	}
 
 	private static <T> boolean compruebaIguales(Arbol_N<T> a, Arbol_N<T> b) {
-
-		// Booleano que comprueba si las raíces de los árboles son iguales
+		
+		//Booleano que comprueba si las raíces de los árboles son iguales
 		boolean sonIguales = a.getRaiz().equals(b.getRaiz());
-
-		// Si el número de hijos de los árboles es igual y las raíces son iguales
+		
+		//Si el número de hijos de los árboles es igual y las raíces son iguales
 		if (a.getNumHijos() == b.getNumHijos() && sonIguales) {
 
-			// Indice para el while
+			//Indice para el while
 			int i = 1;
-
-			// Mientras los hijos sean iguales y no se haya recorrido todos los hijos
+			
+			//Mientras los hijos sean iguales y no se haya recorrido todos los hijos
 			while (sonIguales && i <= a.getNumHijos()) {
-
-				// Se llama a la función de forma recursiva
+				
+				//Se llama a la función de forma recursiva
 				sonIguales = sonIguales && sonIguales(a.getHijoN(i), b.getHijoN(i));
-
-				// Se incrementa el índice
+				
+				//Se incrementa el índice
 				i++;
 			}
 		} else {
-
-			// Si no se cumple la condición, se pone el booleano en false
+			
+			//Si no se cumple la condición, se pone el booleano en false
 			sonIguales = false;
 		}
 		return sonIguales;
@@ -184,15 +220,10 @@ public class Pruebas<T> {
 	 */
 	private static int getMinInArbol_N(Arbol_N<Integer> a) {
 		if (a.esVacio()) {
-			// Si el árbol está vacío, devuelve el valor máximo de integer
-			return Integer.MAX_VALUE;
-		}
-		
-		// Se obtiene la raíz del árbol
+            return Integer.MAX_VALUE;
+        }
+
 		int min = a.getRaiz();
-		// Se recorren los hijos del árbol
-		//Para cada hijo se llama a la función de forma recursiva
-		//Nos quedamos con el valor mínimo de los hijos
 		for (Arbol_N<Integer> hijo : a.getHijos()) {
 			min = hijo.esVacio() ? min : Math.min(min, getMinInArbol_N(hijo));
 		}
@@ -211,14 +242,9 @@ public class Pruebas<T> {
 	 */
 
 	private static int getMaxInArbol_N(Arbol_N<Integer> a) {
-		// Si el árbol está vacío, devuelve el valor mínimo de integer
 		if (a.esVacio()) {
 			return Integer.MIN_VALUE;
 		}
-		// Se obtiene la raíz del árbol
-		// Se recorren los hijos del árbol
-		// Para cada hijo se llama a la función de forma recursiva
-		// Nos quedamos con el valor máximo de los hijos
 		int max = a.getRaiz();
 		for (Arbol_N<Integer> hijo : a.getHijos()) {
 			max = hijo.esVacio() ? max : Math.max(max, getMaxInArbol_N(hijo));
@@ -226,51 +252,20 @@ public class Pruebas<T> {
 		return max;
 	}
 	
-	//funcion que diga en que nivel se encuentra un dato buiscado, si no lo encuentra devuelve 0
-	//si lo encuentra devuelve el nivel
 	
-	public static int nivelDato(Arbol_N<Integer> a, int dato) {
-		return enNivel(a, dato, 1);
-	}
-
-	private static int enNivel(Arbol_N<Integer> a, int dato, int l) {
-		if (a.esVacio()) {
-			return -1;
-		}
-		if (a.getRaiz() == dato) {
-			return l;
-		}
-		
-		int nivel = 0;
-		int i=0;
-		boolean encontrado = false;
-		
-		while (i < a.getNumHijos() && !encontrado) {
-			nivel = enNivel(a.getHijoN(i), dato, l + 1);
-			encontrado = nivel != -1 && nivel != 0;
-			i++;
-		}
-		
-		return encontrado ? nivel : 0;
-	}
 	
-
+	
 	public static void main(String[] args) {
-		
-		
-		
-		
 
 		// _______________________________________________ pruebas gradoArbol
 
-		/* EJEMPLO:
-		 * 			  x-------- 1 -------x
+		/* ARBOL UNO:
+		 * 			   -------- 1 -------
 		 *			  |	       / \       |
 		 * 			  2		  3	  4      5
 		 * 			  |	     / \       / | \
-		 * 			  6	    7   8	  9  10  11
+		 * 			  6	    7   8	  9	 10 11
 		 */
-
 
 		LinkedList<Arbol_N<Integer>> lista = new LinkedList<Arbol_N<Integer>>();
 		LinkedList<Arbol_N<Integer>> listaVacia = new LinkedList<Arbol_N<Integer>>();
@@ -314,18 +309,13 @@ public class Pruebas<T> {
 		lista4.add(cinco);
 
 		Arbol_N<Integer> uno = new Arbol_N<Integer>(1, lista4);
-
-		System.out.println("\n____________GRADO ARBOL____________\n");
+		
+		System.out.println("\n_GRADO ARBOL_\n");
 		System.out.println("GRADO ARBOL: " + gradoArbol(uno));
-		System.out.println("\n__________FIN GRADO ARBOL__________\n\n");
+		System.out.println("GRADO ARBOL: " + gradoArbol(cuatro));
+		System.out.println("GRADO ARBOL: " + gradoArbol(new Arbol_N<Integer>()));
+		System.out.println("\n_FIN GRADO ARBOL_\n\n");
 
-		
-		// _______________________________________________ pruebas nivelDato
-
-		System.out.println("\n____________NIVEL DATO____________\n");
-		System.out.println("NIVEL DATO (1): " + nivelDato(uno, 1));
-		
-		System.out.println("NIVEL DATO (2): " + nivelDato(uno,11));
 //_______________________________________________ pruebas esABB
 
 		LinkedList<Arbol_N<Integer>> lista6 = new LinkedList<Arbol_N<Integer>>();
@@ -333,9 +323,10 @@ public class Pruebas<T> {
 		LinkedList<Arbol_N<Integer>> lista8 = new LinkedList<Arbol_N<Integer>>();
 		LinkedList<Arbol_N<Integer>> lista9 = new LinkedList<Arbol_N<Integer>>();
 		LinkedList<Arbol_N<Integer>> lista10 = new LinkedList<Arbol_N<Integer>>();
-
+		
 		lista10.add(new Arbol_N<Integer>());
 		lista10.add(new Arbol_N<Integer>(9, listaVacia));
+
 
 		lista9.add(new Arbol_N<Integer>());
 		lista9.add(new Arbol_N<Integer>(6, lista10));
@@ -359,6 +350,7 @@ public class Pruebas<T> {
 		Arbol_N<Integer> ABB2 = new Arbol_N<Integer>(8, lista6);
 
 		
+		
 		// -------8-------
 		// 		 / \
 		// 		3 	10
@@ -366,22 +358,17 @@ public class Pruebas<T> {
 		// 	  2   5
 		// 	 / \ / \
 		//  1   V   6
-		// 		   / \
-		// 		  V   9
-			
+		//  |    \ / \
+		//  V     V   9
 
-		System.out.println("\n____________ABB____________\n");
-		// System.out.println("ES ABB (uno): " + esABB(uno));
-		System.out.println("ES ABB (ABB2): " + esABB(ABB2));
-		System.out.println("\n__________FIN ABB__________\n\n");
+		
+	
+		
+		System.out.println("\n_NIVEL DATO_\n");
+		//System.out.println("NIVEL DATO 1: " + nivelDato(uno, 1));
+		//System.out.println("NIVEL DATO 1: " + nivelDato(uno, 11));
 
-		// _______________________________________________ pruebas sonIguales
-
-		System.out.println("\n______PRUEBAS SON IGUALES_______\n");
-		System.out.println("SON IGUALES: " + sonIguales(uno, uno));
-		System.out.println("NO SON IGUALES: " + sonIguales(uno, ABB2));
-		System.out.println("\n_____FIN PRUEBAS SON IGUALES___\n\n");
-
+		
 	}// main
 
-}// Clase Pruebas
+}// Clase Pruebas

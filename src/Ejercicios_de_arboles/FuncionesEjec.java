@@ -1,19 +1,25 @@
 package 	    Ejercicios_de_arboles;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class FuncionesEjec {
 
 	public static void main(String[] args) {
-		ARBOLBIN<Integer> d = new ARBOLBIN<Integer>(new ARBOLBIN<Integer>(), 4, new ARBOLBIN<Integer>());
+
+		ARBOLBIN<Integer> g = new ARBOLBIN<Integer>(new ARBOLBIN<Integer>(), 12, new ARBOLBIN<Integer>());
+
+		ARBOLBIN<Integer> d = new ARBOLBIN<Integer>(g, 4, new ARBOLBIN<Integer>());
 		ARBOLBIN<Integer> f = new ARBOLBIN<Integer>(new ARBOLBIN<Integer>(), 6, new ARBOLBIN<Integer>());
 		// ArbolBin<Character> e = new ArbolBin<Character>(new
 		// ArbolBin<Character>(),'E',f);
 		ARBOLBIN<Integer> e = new ARBOLBIN<Integer>(new ARBOLBIN<Integer>(), 5, f);
 		ARBOLBIN<Integer> b = new ARBOLBIN<Integer>(d, 2, new ARBOLBIN<Integer>());
 		ARBOLBIN<Integer> c = new ARBOLBIN<Integer>(e, 3, new ARBOLBIN<Integer>());
-
 		
+		
+
 		
 		
 		//a y a2 son iguales
@@ -30,6 +36,8 @@ public class FuncionesEjec {
 		ARBOLBIN<Integer> ArbolBindeBusqueda = new ARBOLBIN<Integer>(new ARBOLBIN<Integer>(), 5, new ARBOLBIN<Integer>());
 		ARBOLBIN<Integer> ArbolBindeBusqueda2 = new ARBOLBIN<Integer>(ArbolBindeBusqueda, 3, new ARBOLBIN<Integer>());
 		
+		
+		//Arbol AVL
 		
 		
 		
@@ -55,6 +63,16 @@ public class FuncionesEjec {
 		 *         |---4--| 		   x	
 		 *         x      x
 		 */
+		
+		//Eliminar nodos hoja
+		
+		//eliminarNodosHoja(a);
+		
+		
+		
+		escribirNodoSubLlenos(a);
+		
+		
 		
 		// **************************** RECORRIDOS ********************************
 		
@@ -120,9 +138,205 @@ public class FuncionesEjec {
 		System.out.println("\n\nComparar busqueda de dato en arbol: ");
 		System.out.println("Sin orden: "+buscardatoEnArbol(ArbolBindeBusqueda, 8));
 		
+		// **************************** ARBOLES ******************************** avl
+		
+		System.out.println("\n-------------------------ARBOLAVL-------------------------------------\n");
+		System.out.println("\nArbol AVL: " + esAVL(a));
+		
+		
 
 		System.out.println("\n*** FIN ***");
+		
+		
+		
+		System.out.println("\n\nProfundidad minima: "+profundidadMinima(a));
+		
+		
+		//ejercicio 14
+		ArrayList<Integer> lista = new ArrayList<Integer>();
 
+		System.out.println("\n\nCamino a: "+caminoA(a, 6, lista));
+		
+		
+		
+		
+		imprimirEnAnchos(a);
+		
+	
+
+	}
+	
+
+	/*
+	 * 			|-------1-------|
+	 *  	|---2--| 		|---3---| 
+	 *    |-4-|    x 	  |-5-|     x 
+	 *    12   x			  6   x
+	 */
+	
+
+	//ejercicio 14
+	
+	/**
+	 Implementar el procedimiento caminoA() que tome como parámetro un árbol
+binario y un elemento, y devuelva un camino desde la raíz hasta dicho elemento
+(ambos incluidos). En caso de que el elemento no se encuentre en el árbol, debe
+devolverse la lista vacía
+	 */
+	
+	
+	/*
+	 * 			|-------1-------|
+	 *  	|---2--| 		|---3---| 
+	 *    |-4-|    x 	  |-5-|     x 
+	 *    x   x			  6   x
+	 */
+	
+	
+	
+	// Método para encontrar el camino desde la raíz de un árbol binario hasta un nodo con valor 'x'
+	// a: el árbol binario
+	// x: el valor del nodo al que queremos encontrar el camino
+	// lista: una lista para almacenar el camino
+
+	private static ArrayList<Integer> caminoA(ARBOLBIN<Integer> a, int x, ArrayList<Integer> lista) {
+	    
+	    // Si el árbol está vacío, retornar una lista vacía
+	    if (a.esVacio()) {
+	        return new ArrayList<Integer>();
+	    } else {
+	        // Si la raíz del árbol es el valor que buscamos, agregarlo a la lista y retornar la lista
+	        if (a.raiz() == x) {
+	            lista.add(a.raiz());
+	            return lista;
+	        } else {
+	            // Intentar encontrar el camino en el subárbol izquierdo
+	            ArrayList<Integer> listaIzq = caminoA(a.hijoIzquierdo(), x, lista);
+	            if (!listaIzq.isEmpty()) {
+	                // Si se encuentra el camino en el subárbol izquierdo, agregar la raíz actual y retornar la lista
+	                listaIzq.add(a.raiz());
+	                return listaIzq;
+	            } else {
+	                // Intentar encontrar el camino en el subárbol derecho
+	                ArrayList<Integer> listaDcho = caminoA(a.hijoDerecho(), x, lista);
+	                if (!listaDcho.isEmpty()) {
+	                    // Si se encuentra el camino en el subárbol derecho, agregar la raíz actual y retornar la lista
+	                    listaDcho.add(a.raiz());
+	                    return listaDcho;
+	                } else {
+	                    // Si no se encuentra el camino ni en el subárbol izquierdo ni en el derecho, retornar una lista vacía
+	                    return new ArrayList<Integer>();
+	                }
+	            }
+	        }
+	    }
+	}
+	
+	
+	//ejercicio 13
+	//Implementar un procedimiento que compruebe si un árbol binario es completo.
+	
+	public static boolean esArbolCompleto(ARBOLBIN<?> arbol) {
+	    // Define un método estático que devuelve un booleano e indica si un árbol binario es completo.
+	    // El método recibe un parámetro arbol de tipo ARBOLBIN con un tipo genérico desconocido (?).
+
+	    if (arbol.esVacio()) {
+	        // Verifica si el árbol está vacío.
+	        return true;
+	        // Si el árbol está vacío, entonces es considerado completo y retorna true.
+	    }
+
+	    Queue<ARBOLBIN<?>> cola = new LinkedList<>();
+	    // Crea una cola (queue) para recorrer el árbol en amplitud (nivel por nivel).
+	    cola.add(arbol);
+	    // Añade el árbol inicial a la cola.
+
+	    boolean encontradoHueco = false;
+	    // Inicializa una bandera que indica si se ha encontrado un hueco en el árbol (una posición vacía).
+
+	    while (!cola.isEmpty()) {
+	        // Comienza un bucle que se ejecuta mientras la cola no esté vacía.
+	        ARBOLBIN<?> actual = cola.poll();
+	        // Extrae el siguiente nodo de la cola y lo asigna a la variable 'actual'.
+
+	        if (actual.hijoIzquierdo().esVacio()) {
+	            // Verifica si el hijo izquierdo del nodo actual está vacío.
+	            encontradoHueco = true;
+	            // Si el hijo izquierdo está vacío, marca la bandera encontradoHueco como true.
+	        } else {
+	            if (encontradoHueco) {
+	                // Si ya se había encontrado un hueco anteriormente y ahora se encuentra un nodo no vacío,
+	                return false;
+	                // el árbol no es completo y retorna false.
+	            }
+	            cola.add(actual.hijoIzquierdo());
+	            // Si el hijo izquierdo no está vacío y no se ha encontrado un hueco antes, añade el hijo izquierdo a la cola.
+	        }
+
+	        if (actual.hijoDerecho().esVacio()) {
+	            // Verifica si el hijo derecho del nodo actual está vacío.
+	            encontradoHueco = true;
+	            // Si el hijo derecho está vacío, marca la bandera encontradoHueco como true.
+	        } else {
+	            if (encontradoHueco) {
+	                // Si ya se había encontrado un hueco anteriormente y ahora se encuentra un nodo no vacío,
+	                return false;
+	                // el árbol no es completo y retorna false.
+	            }
+	            cola.add(actual.hijoDerecho());
+	            // Si el hijo derecho no está vacío y no se ha encontrado un hueco antes, añade el hijo derecho a la cola.
+	        }
+	    }
+	    return true;
+	    // Si se recorre todo el árbol sin encontrar violaciones a las condiciones de completitud, retorna true.
+	}
+
+
+	//ejercicio 11
+
+	public static int contarNodos(ARBOLBIN<Integer> a) {
+		return (a.esVacio()) ? 0 : 
+			(1 + 
+			contarNodos(a.hijoIzquierdo()) + 
+			contarNodos(a.hijoDerecho()));
+
+	}// contarNodos
+	
+	public static boolean esLleno(ARBOLBIN<Integer> a) {
+		int nodos = contarNodos(a);
+		int profundidad = profundidad(a);
+		
+	
+		return (Math.pow(2, profundidad) - 1) == nodos;
+		
+		
+	}
+		
+	
+	
+	
+	
+	// ejercicio 10
+	
+	public static ARBOLBIN<Integer> sumarArboles(ARBOLBIN<Integer> a, ARBOLBIN<Integer> b) {
+		return a.esVacio()||b.esVacio() ? new ARBOLBIN<Integer>()
+				
+				: new ARBOLBIN<Integer>(sumarArboles(a.hijoIzquierdo(),b.hijoIzquierdo()),
+						a.raiz() +b.raiz(),
+						sumarArboles(a.hijoDerecho(),b.hijoIzquierdo()));
+	}
+
+	
+	
+	//ejercicio 9
+	public static int profundidadMinima(ARBOLBIN<Integer> a) {
+		//Si el arbol esta vacio, entonces la profundidad es 0
+		return (a.esVacio()) ? 0 : 
+			//Si no esta vacio, entonces la profundidad es 1 + el maximo entre la profundidad del hijo izquierdo y la profundidad del hijo derecho
+			1 + 
+			Math.min(
+					profundidad(a.hijoIzquierdo()), 
+					profundidad(a.hijoDerecho()));
 	}
 	
 	
@@ -148,13 +362,6 @@ public class FuncionesEjec {
 
 	}
 
-	public static int contarNodos(ARBOLBIN<Integer> a) {
-		return (a.esVacio()) ? 0 : 
-			(1 + 
-			contarNodos(a.hijoIzquierdo()) + 
-			contarNodos(a.hijoDerecho()));
-
-	}// contarNodos
 
 	// func que reciba arbolbin de numeros enteros y devuelva cuantos son pares
 	public static int cuanosSonpares(ARBOLBIN<Integer> a) {
@@ -165,12 +372,90 @@ public class FuncionesEjec {
 				cuanosSonpares(a.hijoIzquierdo()) + 
 				cuanosSonpares(a.hijoDerecho());
 	}
+	
+	/**
+	 * 			|-------1-------|
+	 *  	|---2--| 		|---3---| 
+	 *    |-4-|    x 	  |-5-|     x 
+	 *    x   x			  6   x
+	 */
+	
+	
+	public static void escribirNodoSubLlenos(ARBOLBIN<Integer> a) {
+		
+		if (!a.esVacio()) {
+			
+			if (!(a.hijoIzquierdo().esVacio() && a.hijoDerecho().esVacio())) {
+			System.out.println(a.raiz());
+				
+			} else {
+				escribirNodoSubLlenos(a.hijoIzquierdo());
+				escribirNodoSubLlenos(a.hijoDerecho());
+			}
+		}
+	}
+	
+	
+	
+	public static void eliminarNodosHoja(ARBOLBIN<Integer> a) {
+		
+		if (!a.esVacio()) {
+			
+			if (a.hijoIzquierdo().esVacio() && a.hijoDerecho().esVacio()) {
+				System.out.println("Nodo eliminado");
+				
+				a = new ARBOLBIN<Integer>();
+				
+			} else {
+				eliminarNodosHoja(a.hijoIzquierdo());
+				eliminarNodosHoja(a.hijoDerecho());
+			}
+		}
+	}
+	
+	
+	public static void imprimirNodosHoja(ARBOLBIN<Integer> a) {
+		
+		if (a.esVacio()) {
+			return;
+		}
+		
+		if (a.hijoIzquierdo().esVacio() && a.hijoDerecho().esVacio()) {
+			
+			System.out.println(a.raiz());
+		} else {
+			
+			
+			
+			 imprimirNodosHoja(a.hijoIzquierdo());
+			 imprimirNodosHoja(a.hijoDerecho());
+		}
+	}
+	
+	
+	
 
 	public static int cuantosNodosHoja(ARBOLBIN<Integer> a) {
-		return (a.esVacio()) ? 0
-				: (a.hijoIzquierdo().esVacio() && a.hijoDerecho().esVacio() ? 1 : 0)
-						+ cuantosNodosHoja(a.hijoIzquierdo()) + cuantosNodosHoja(a.hijoDerecho());
+	
+		
+		
+		if (a.esVacio()) {
+			return 0;
+		} else {
+			if (a.hijoIzquierdo().esVacio() && a.hijoDerecho().esVacio()) {
+				a = new ARBOLBIN<Integer>();
+				return 1;
+			} else {
+				return cuantosNodosHoja(a.hijoIzquierdo()) + cuantosNodosHoja(a.hijoDerecho());
+			}
+		}
+		
+		
+		
 	}
+
+
+
 
 	public static boolean arbolesIguales(ARBOLBIN<Integer> a, ARBOLBIN<Integer> b) {
 		//Si ambos arboles estan vacios, entonces son iguales
@@ -223,7 +508,10 @@ public class FuncionesEjec {
 	public static void imprimirEnAnchos(ARBOLBIN<Integer> a) {
 		int h = profundidad(a);
 		for (int i = 1; i <= h; i++) {
+			
+			System.out.println("Nivel " + i + ": ");
 			ImprimirNivel(a, i);
+			System.out.println();
 		}
 	}
 	
@@ -255,7 +543,7 @@ public class FuncionesEjec {
 	//sabiendio que tenemos esABB ver si el erbole es AVL
 	public static boolean esAVL(ARBOLBIN<Integer> a) {
 		
-		return !esABB(a) ? false
+		return !esABB(a) ? false: a.esVacio() ? true
 				: Math.abs(profundidad(a.hijoIzquierdo()) - profundidad(a.hijoDerecho())) < 2
 						&& esAVL(a.hijoIzquierdo()) && esAVL(a.hijoDerecho());
 
@@ -273,9 +561,28 @@ public class FuncionesEjec {
 	 */
 	
 	
-    public static boolean esABB(ARBOLBIN<Integer> a) {
-    	return true;
-    }
+	public static boolean esABB(ARBOLBIN<Integer> a) {
+	    return esABB(a, Integer.MIN_VALUE, Integer.MAX_VALUE);
+	}
+
+	private static boolean esABB(ARBOLBIN<Integer> a, int min, int max) {
+	    // Caso base: un árbol vacío es un ABB
+	    if (a == null || a.esVacio()) {
+	        return true;
+	    }
+
+	    // Obtén el valor de la raíz
+	    int valorRaiz = a.raiz();
+
+	    // Verifica que el valor de la raíz esté dentro del rango permitido
+	    if (valorRaiz <= min || valorRaiz >= max) {
+	        return false;
+	    }
+
+	    // Verifica recursivamente los subárboles izquierdo y derecho
+	    return esABB(a.hijoIzquierdo(), min, valorRaiz) && esABB(a.hijoDerecho(), valorRaiz, max);
+	}
+
 	
 	/**
 	 * Codificar el método buscar2() para que, dado un elemento de tipo T,
